@@ -15,10 +15,9 @@ void ThreadPool::runThreads(){
                 std::unique_lock<std::mutex> lck(poolMutex);
                 cond_var.wait(lck, [this](){return !taskQueue.empty();});
 
-                std::function<void()> workFunctor = taskQueue.front();
+                std::function<void()> workFunctor = taskQueue.front()->GetExecutor();
                 taskQueue.pop();
                 workFunctor();
-
             }
 
         });
@@ -35,7 +34,7 @@ ThreadPool* ThreadPool::getInstance(){
 void ThreadPool::EnQueueTask(Task* task){
     std::cout << " ThreadPool::EnQueueTask \n";
     // PoolEnqueueMutex.lock();
-    taskQueue.push(task->GetExecutor());
+    taskQueue.push(task);
     task->setStatus(Status::QUEUED);
     cond_var.notify_all();
     // PoolEnqueueMutex.unlock();

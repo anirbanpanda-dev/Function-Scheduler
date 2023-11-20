@@ -11,7 +11,8 @@
 class ThreadPool{
     static ThreadPool* pool;
     std::vector<std::thread> threadList;
-    std::queue<std::function<void()>> taskQueue;
+    // std::queue<std::function<void()>> taskQueue;
+    std::queue<Task*> taskQueue;
     int poolSize;
     std::condition_variable cond_var;
     std::mutex poolMutex;
